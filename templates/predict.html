@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Predict Branch</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Import the Poppins font from Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap">
+    <style>
+        /* Style for the navigation bar */
+        .navbar {
+            overflow: hidden;
+            background-color: rgb(38, 38, 38);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 10px;
+            /* Reduced padding */
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            font-size: 20px;
+            border-radius: 10px;
+            width: 100%;
+            /* Adjust width to fit screen */
+            color: white;
+            box-sizing: border-box;
+            /* Ensures padding is included in width */
+        }
+
+        .navbar a {
+            font-size: 15px;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            /* Adjusted padding */
+            border-radius: 10px;
+            margin-left: 5px;
+            /* Reduced margin */
+            margin-right: 5px;
+            /* Reduced margin */
+            box-sizing: border-box;
+            /* Ensures padding is included in width */
+        }
+
+        /* Navbar menu button styles */
+        .navbar a.home,
+        .navbar a.predict,
+        .navbar a.details {
+            background-color: rgb(38, 38, 38);
+            box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Style for all text (except navbar) */
+        body,
+        h2,
+        label,
+        input,
+        button {
+            font-family: 'Poppins', sans-serif;
+            /* Use the Poppins font from Google Fonts */
+        }
+
+        /* Style for centering the heading */
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Style for the form card */
+        .form-card {
+            max-width: 400px;
+            /* Adjust width as needed */
+            margin: 50px auto;
+            /* Centers the card horizontally */
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Style for the form labels */
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        /* Style for the input fields */
+        input {
+            width: calc(100% - 20px);
+            /* Sets input field width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        /* Style for the button */
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="left">MHT-CET Statistics and Branch Predictor</div>
+        <div class="right">
+            <a href="/" class="home">Home</a>
+            <a href="/predict" class="predict">Predict Branch</a>
+            <a href="/student_details" class="details">Student Details</a>
+        </div>
+    </div>
+
+    <h2>Predict Branch</h2>
+    <!-- Form card containing the predict form -->
+    <div class="form-card">
+        <div>
+            <label for="mht_cet_percentile">MHT-CET Percentile:</label>
+            <input type="text" id="mht_cet_percentile" name="mht_cet_percentile" pattern="\d+(\.\d{1,2})?"><br>
+
+            <label for="xii_marks">XIIth Grade/Diploma Marks:</label>
+            <input type="text" id="xii_marks" name="xii_marks" pattern="\d+(\.\d{1,2})?"><br>
+
+            <button id="predictBtn">Predict Branch</button>
+        </div>
+
+        <div id="prediction_result"></div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#predictBtn").click(function () {
+                $.ajax({
+                    url: '/predict',
+                    type: 'POST',
+                    data: {
+                        'mht_cet_percentile': $("#mht_cet_percentile").val(),
+                        'xii_marks': $("#xii_marks").val()
+                    },
+                    success: function (response) {
+                        $("#prediction_result").text("Predicted Branch: " + response.predicted_branch);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

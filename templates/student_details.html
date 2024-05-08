@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Student Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Import the Poppins font from Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap">
+    <style>
+        /* Navbar styling */
+        .navbar {
+            overflow: hidden;
+            background-color: rgb(38, 38, 38);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 10px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            font-size: 20px;
+            border-radius: 10px;
+            width: 100%;
+            /* Adjust width to fit screen */
+            color: white;
+            box-sizing: border-box;
+            /* Ensures padding is included in width */
+        }
+
+        .navbar a {
+            font-size: 15px;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            /* Adjusted padding */
+            border-radius: 10px;
+            margin-left: 5px;
+            /* Reduced margin */
+            margin-right: 5px;
+            /* Reduced margin */
+            box-sizing: border-box;
+            /* Ensures padding is included in width */
+        }
+
+        /* Navbar menu button styles */
+        .navbar a.home,
+        .navbar a.predict,
+        .navbar a.details {
+            background-color: rgb(38, 38, 38);
+            box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Style for all text (except navbar) */
+        body,
+        h1,
+        h2,
+        label,
+        input,
+        button {
+            font-family: 'Poppins', sans-serif;
+            /* Use the Poppins font from Google Fonts */
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            /* Add top margin for spacing */
+        }
+
+        /* Style for the form */
+        form,
+        .student-details-card {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Style for the form labels */
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        /* Style for the input fields */
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        /* Style for the button */
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* Style for the student details heading */
+        .student-details-card h2 {
+            text-align: center;
+            /* Center the heading */
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+
+    <script>
+        function filterOptions(inputElement, selectElement) {
+            const inputValue = inputElement.value.toLowerCase();
+            const options = selectElement.options;
+
+            for (let i = 0; i < options.length; i++) {
+                if (options[i].text.toLowerCase().includes(inputValue)) {
+                    options[i].style.display = "";
+                } else {
+                    options[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="left">MHT-CET Statistics and Branch Predictor</div>
+        <div class="right">
+            <a href="/" class="home">Home</a>
+            <a href="/predict" class="predict">Predict Branch</a>
+            <a href="/student_details" class="details">Student Details</a>
+        </div>
+    </div>
+
+    <h1>Student Details</h1>
+
+    <!-- Form card containing the student details form -->
+    <form action="/student_details" method="post">
+        <label for="name">Name:</label>
+        <input list="name" name="name" id="name">
+        <datalist id="name">
+            {% for name in names %}
+            <option value="{{ name }}">{{ name }}</option>
+            {% endfor %}
+        </datalist><br><br>
+
+        <label for="branch">Branch:</label>
+        <input list="branch" name="branch" id="branch">
+        <datalist id="branch">
+            {% for branch in branches %}
+            <option value="{{ branch }}">{{ branch }}</option>
+            {% endfor %}
+        </datalist><br><br>
+
+        <input type="submit" value="Get Details">
+    </form>
+
+    {% if student_details %}
+    <!-- Card for displaying student details -->
+    <div class="student-details-card">
+        <h2>Details for {{ student_details['Name'] }}</h2>
+        <ul>
+            <li>UID: {{ student_details['UID'] }}</li>
+            <li>Branch: {{ student_details['Branch'] }}</li>
+            <li>Xth Grade Score: {{ student_details['Xth_Grade_Score'] }}</li>
+            <li>XIIth Grade Score: {{ student_details['XIIth_Grade_/_Diploma_Score'] }}</li>
+            <li>Mht-Cet Percentile: {{ student_details['Mht-Cet_Percentile'] }}</li>
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <p>{{ error }}</p>
+    {% endif %}
+</body>
+
+</html>
